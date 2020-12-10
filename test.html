@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/bowling.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $.each(scoreSheet, function(i,v){
+                var rowToAppend = "<tr><td>" + (i + 1) + "</td>" + 
+                    "<td><input type='text' class='scoreOne' value='" + numberDisplay(v[0]) + "'></td>" + 
+                    "<td><input type='text' class='scoreTwo' value='" + numberDisplay(v[1]) + "'></td>";
+                rowToAppend += (i === 9) ? 
+                    "<td><input type='text' class='scoreThree' value='" + numberDisplay(v[2]) + "'></td>" : 
+                    "<td></td>";
+                rowToAppend += "<td class='frameTotal'></td></tr>";
+
+                $("#scoreTable").append(rowToAppend);
+            });
+            
+            $("#getScore").on('click', function(e) {
+                e.preventDefault();
+                scoreSheet = [];
+                $("#scoreTable tr").each(function (i,v) {
+                    if (i !== 0) {
+                    var myRow = [
+                            getProperNumber(parseInt($(this).find(".scoreOne").val())),
+                            getProperNumber(parseInt($(this).find(".scoreTwo").val())),
+                            getProperNumber(parseInt($(this).find(".scoreThree").val())) 
+                        ];
+                        scoreSheet.push(myRow);
+                    }
+                });
+                var total = calculateScore();
+                $.each(frameScores, function(i, v) {
+                    $($(".frameTotal")[i]).text(v);
+                });
+                $("#totalScore").text(total);
+            });
+
+        });
+
+        function numberDisplay(x) {
+            return typeof x === "number" ? x : "";
+        }       
+        </script>
+    </head>
+    <body>
+        <h1>Calculate Your Bowling Score</h1>
+        <table id="scoreTable">
+            <tr><th>Frame</th><th>Roll 1</th><th>Roll 2</th><th>Roll 3</th><th>Frame Total</th></tr>
+        </table>
+        <button id="getScore">Calculate Score</button>
+        <div>Total Score Is: <span id="totalScore"></span></div>
+    </body>
+</html>
